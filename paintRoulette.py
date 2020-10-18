@@ -7,8 +7,8 @@ technique = ('Speed Paint: 40 Minutes / 16 color palette / 2 brushes', 'Speed Pa
              'palette and tools', 'Personal Demon: Unlimited Time / Strive for Personal Best', 'Technique '
              'Feature', 'Theme Challenge')
 techFeat = ('Non Metallic Metal', 'Loaded Brush Blending', 'Object Source Lighting', 'Glazing', 'Wet Blend', 'Freehand'
-            'Two Brush Blending','Drybrush', 'Edge Highlight', 'Weathering')
-themeCh = ('Grimdark', 'Neon', 'Gem Tones', 'Oldschool Warhammer', 'Pastel', 'Comic Book')
+            'Two Brush Blending', 'Dry-brush', 'Edge Highlight', 'Weathering')
+themeCh = ('Grimdark', 'Neon', 'Gem Tones', 'Old-School WarHammer', 'Pastel', 'Comic Book')
 values = ('Black', 'White', 'Gray', 'Brown')
 warm = ('Yellow-Green', 'Yellow', 'Yellow-Orange', 'Orange', 'Orange-Red', 'Red')
 cool = ('Red-Violet', 'Violet', 'Blue-Violet', 'Blue', 'Blue-Green', 'Green')
@@ -18,7 +18,18 @@ quotes = ("We don't make mistakes, just happy little accidents.",
           "Talent is a pursued interest. Anything that you're willing to practice, you can do.",
           "There's nothing wrong with having a tree as a friend.", "I guess I’m a little weird. I like to talk to trees"
           " and animals. That’s okay though; I have more fun than most people.", "Let's get crazy.", "Believe that you "
-          "can do it cause you can do it.", "What can be painted can be punished.")
+          "can do it cause you can do it.", "What can be painted can be punished.", "It's the imperfections that make "
+          "something beautiful, that's what makes it different and unique from everything else.",
+          "Ever make mistakes in life? Let's make them birds. Yeah, they're birds now.",
+          "Put light against light - you have nothing. Put dark against dark - you have nothing. It's the contrast of "
+          "light and dark that each give the other one meaning.", "Whatever makes you happy, you put in your world."
+          "Let's build us a happy, little cloud that floats around the sky.", "It's so important to do something every "
+          "day that will make you happy", "Trees don't grow even, they don't grow straight just however it makes them "
+          "happy.", "We have no limits to our world. We're only limited by our imagination.",
+          "People might look at you a bit funny, but it's okay. Artists are allowed to be a bit different."
+          "It's hard to see things when you're too close. Take a step back and look.",
+          "We don't laugh because we feel good; we feel good because we laugh.",
+          "Talent is a pursued interest. Anything that you're willing to practice, you can do.")
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
@@ -53,17 +64,16 @@ def roulette():
     theRoll += tech + "\n"
     if tech == 'Technique Feature':
         feat = random.choice(techFeat)
-        theRoll += 'Technique Feature: ' + feat + '\n'
+        theRoll += f'Technique Feature: {feat} \n'
     elif tech == 'Theme Challenge':
         chall = random.choice(themeCh)
-        theRoll += 'Theme Challenge: ' + chall + '\n'
-    colors = []
+        theRoll += f'Theme Challenge: {chall}\n'
     colors = colorSet()
     while colors[0] == colors[1]:
         colors = colorSet()
-    theRoll += 'Colors: ' + colors[0] + ' and ' + colors[1] + '\n'
+    theRoll += f'Colors: {colors[0]} and {colors[1]}\n'
     sett = random.choice(setting)
-    theRoll += 'Setting: ' + sett + '```'
+    theRoll += f'Setting: {sett}```'
     return theRoll
 
 
