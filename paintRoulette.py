@@ -9,8 +9,10 @@ technique = ('Speed Paint: 40 Minutes / 16 color palette / 2 brushes', 'Speed Pa
 techFeat = ('Non Metallic Metal', 'Loaded Brush Blending', 'Object Source Lighting', 'Glazing', 'Wet Blend', 'Freehand'
             'Two Brush Blending','Drybrush', 'Edge Highlight', 'Weathering')
 themeCh = ('Grimdark', 'Neon', 'Gem Tones', 'Oldschool Warhammer', 'Pastel', 'Comic Book')
-color = ('Red-Violet', 'Violet', 'Blue-Violet', 'Blue', 'Blue-Green', 'Green', 'Yellow-Green', 'Yellow', 'Yellow-Orange',
-         'Orange', 'Orange-Red', 'Red', 'Brown', 'Black', 'Gray', 'White')
+values = ('Black', 'White', 'Gray', 'Brown')
+warm = ('Yellow-Green', 'Yellow', 'Yellow-Orange', 'Orange', 'Orange-Red', 'Red')
+cool = ('Red-Violet', 'Violet', 'Blue-Violet', 'Blue', 'Blue-Green', 'Green')
+color = (warm, cool, values)
 setting = ('Mountain', 'Forest', 'Swamp', 'Dungeon', 'Snow', 'Sewer')
 quotes = ("We don't make mistakes, just happy little accidents.",
           "Talent is a pursued interest. Anything that you're willing to practice, you can do.",
@@ -23,6 +25,28 @@ TOKEN = os.getenv('DISCORD_TOKEN')
 client = discord.Client()
 
 
+def colorSet():
+    c1 = random.choice(color)
+    c2 = random.choice(color)
+
+    if c1 == values:
+        c1 = random.choice(values)
+    elif c1 == cool:
+        c1 = random.choice(cool)
+    elif c1 == warm:
+        c1 = random.choice(warm)
+
+    if c2 == values:
+        c2 = random.choice(values)
+    elif c2 == cool:
+        c2 = random.choice(cool)
+    elif c2 == warm:
+        c2 = random.choice(warm)
+
+    colors = (c1, c2)
+    return colors
+
+
 def roulette():
     theRoll = '```Challenge: '
     tech = random.choice(technique)
@@ -33,9 +57,11 @@ def roulette():
     elif tech == 'Theme Challenge':
         chall = random.choice(themeCh)
         theRoll += 'Theme Challenge: ' + chall + '\n'
-    color1 = random.sample(color, 1)
-    color2 = random.sample(color, 1)
-    theRoll += 'Colors: ' + str(color1) + ', and ' + str(color2) + '\n'
+    colors = []
+    colors = colorSet()
+    while colors[0] == colors[1]:
+        colors = colorSet()
+    theRoll += 'Colors: ' + colors[0] + ' and ' + colors[1] + '\n'
     sett = random.choice(setting)
     theRoll += 'Setting: ' + sett + '```'
     return theRoll
