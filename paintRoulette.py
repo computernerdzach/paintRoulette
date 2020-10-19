@@ -2,6 +2,7 @@ import os
 import random
 import discord
 from dotenv import load_dotenv
+import re
 
 technique = ('Speed Paint: 40 Minutes / 16 color palette / 2 brushes', 'Speed Paint: 60 Minutes / extended '
              'palette and tools', 'Personal Demon: Unlimited Time / Strive for Personal Best', 'Technique '
@@ -17,13 +18,16 @@ setting = ('Mountain', 'Forest', 'Swamp', 'Dungeon', 'Snow', 'Sewer')
 quotes = ("We don't make mistakes, just happy little accidents.",
           "Talent is a pursued interest. Anything that you're willing to practice, you can do.",
           "There's nothing wrong with having a tree as a friend.", "I guess I’m a little weird. I like to talk to trees"
-          " and animals. That’s okay though; I have more fun than most people.", "Let's get crazy.", "Believe that you "
-          "can do it cause you can do it.", "What can be painted can be punished.", "It's the imperfections that make "
+          " and animals. That’s okay though; I have more fun than most people.",
+          "Let's get crazy.", "Believe that you "
+          "can do it cause you can do it.", "What can be painted can be punished.",
+          "It's the imperfections that make "
           "something beautiful, that's what makes it different and unique from everything else.",
           "Ever make mistakes in life? Let's make them birds. Yeah, they're birds now.",
           "Put light against light - you have nothing. Put dark against dark - you have nothing. It's the contrast of "
           "light and dark that each give the other one meaning.", "Whatever makes you happy, you put in your world."
-          "Let's build us a happy, little cloud that floats around the sky.", "It's so important to do something every "
+          "Let's build us a happy, little cloud that floats around the sky.",
+          "It's so important to do something every "
           "day that will make you happy", "Trees don't grow even, they don't grow straight just however it makes them "
           "happy.", "We have no limits to our world. We're only limited by our imagination.",
           "People might look at you a bit funny, but it's okay. Artists are allowed to be a bit different."
@@ -40,7 +44,6 @@ client = discord.Client()
 
 # assigns and returns two colors
 def colorSet():
-
     # select ranges for each color
     c1 = random.choice(color)
     c2 = random.choice(color)
@@ -63,6 +66,7 @@ def colorSet():
     # group colors in a tuple and return them
     colors = (c1, c2)
     return colors
+
 
 # picks out challenges and returns a string to report these challenges using f syntax
 def roulette():
@@ -103,13 +107,36 @@ async def on_message(message):
     user = str(message.author)
     if message.author == client.user:
         return
-    if '!paint' in message.content.lower():
-        await message.channel.send(roulette())
-    elif '!bob' in message.content.lower():
-        await message.channel.send(quote())
-    elif '!bye' in message.content.lower():
-        await message.channel.send('Thanks for painting with me!')
-        await client.close()
+    # gets bot's attention
+    if '!bob' in message.content.lower():
+        # help message activated
+        if 'help' in message.content.lower():
+            await message.channel.send(f'```Hi, {user}!\n'
+                f'To get my attention use [!bob]\n'
+                f'To paint a mini you selected, add a space and [paint 0]\n'
+                f'To randomly select a mini, add [paint] after a space, then after another space '
+                f'type the number of minis you are selecting from, remember to number them first!\n'
+                f'For an inspirational quote from Bob Ross, add a space then [quote]```')
+        # activate paint challenge
+        if ' paint' in message.content.lower():
+            # this tells the bot not to select a mini for the painter
+            if ' 0' in message.content.lower():
+                await message.channel.send(f'Alrighty, painter-{user}. Here is your challenge\n' + roulette())
+            # otherwise, if there is a number and it's greater than 0, select a random number based on how many
+            # minis the painter has supplied
+            elif len(re.findall(f'\d+', message.content)) > 0:
+                number = [int(i) for i in message.content.split() if i.isdigit()]
+                mini = str(random.randint(1, number[0]))
+                await message.channel.send(f'Alrighty, painter-{user}. Paint mini # {mini}\n')
+                await message.channel.send(roulette())
+        # activates bob ross quotes at random
+        elif ' quote' in message.content.lower():
+            await message.channel.send(quote())
+        # might remove this functionality... gives users the ability to dismiss bob from the server til he is relaunched
+        elif ' bye' in message.content.lower():
+            await message.channel.send('Thanks for painting with me!')
+            await client.close()
+
 
 # initialize and launch discord client
 client.run(TOKEN)
