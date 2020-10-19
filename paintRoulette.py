@@ -31,44 +31,53 @@ quotes = ("We don't make mistakes, just happy little accidents.",
           "We don't laugh because we feel good; we feel good because we laugh.",
           "Talent is a pursued interest. Anything that you're willing to practice, you can do.")
 
+# use dotenv to retrieve bot's token
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
+# set shortcut for discord.Client()
 client = discord.Client()
 
 
+# assigns and returns two colors
 def colorSet():
+
+    # select ranges for each color
     c1 = random.choice(color)
     c2 = random.choice(color)
 
+    # select random colors from each range, first color 1 than color2
     if c1 == values:
-        c1 = random.choice(values)
+        c1 = f'(Value) {random.choice(values)}'
     elif c1 == cool:
-        c1 = random.choice(cool)
+        c1 = f'(Cool Color) {random.choice(cool)}'
     elif c1 == warm:
-        c1 = random.choice(warm)
+        c1 = f'(Warm Color) {random.choice(warm)}'
 
     if c2 == values:
-        c2 = random.choice(values)
+        c2 = f'(Value) {random.choice(values)}'
     elif c2 == cool:
-        c2 = random.choice(cool)
+        c2 = f'(Cool Color) {random.choice(cool)}'
     elif c2 == warm:
-        c2 = random.choice(warm)
+        c2 = f'(Warm Color) {random.choice(warm)}'
 
+    # group colors in a tuple and return them
     colors = (c1, c2)
     return colors
 
-
+# picks out challenges and returns a string to report these challenges using f syntax
 def roulette():
     theRoll = '```Challenge: '
     tech = random.choice(technique)
-    theRoll += tech + "\n"
+    theRoll += f'{tech}\n'
     if tech == 'Technique Feature':
         feat = random.choice(techFeat)
         theRoll += f'Technique Feature: {feat} \n'
     elif tech == 'Theme Challenge':
         chall = random.choice(themeCh)
         theRoll += f'Theme Challenge: {chall}\n'
+    # assign colors
     colors = colorSet()
+    # make sure colors are not the same color twice
     while colors[0] == colors[1]:
         colors = colorSet()
     theRoll += f'Colors: {colors[0]} and {colors[1]}\n'
@@ -77,15 +86,18 @@ def roulette():
     return theRoll
 
 
+# grabs a random bob ross quote
 def quote():
     return random.choice(quotes)
 
 
+# prints to console indicating a successful connection to discord
 @client.event
 async def on_ready():
     print(f'{client.user} has connected to Discord!')
 
 
+# here the discord library listens for commands and responds with challenges, quotes, or quitting the program
 @client.event
 async def on_message(message):
     user = str(message.author)
@@ -99,4 +111,5 @@ async def on_message(message):
         await message.channel.send('Thanks for painting with me!')
         await client.close()
 
+# initialize and launch discord client
 client.run(TOKEN)
